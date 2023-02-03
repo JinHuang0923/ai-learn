@@ -23,7 +23,9 @@ class RegDataSet(Dataset):
         return len(self.imgs)
 
     def __getitem__(self, item):
+        # 按空格分割 把图片路径跟对应的lexicon索引分开
         img_path, lexicon_index = self.imgs[item].split()
+        # lexicon 是一个字符串,存储的具体值 strip会去掉其中的空格.
         lexicon = self.lexicons[int(lexicon_index)].strip()
         img = cv2.imread(os.path.join(self.dataset_root, img_path))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -42,5 +44,6 @@ class RegDataSet(Dataset):
         return out_img, label
 
     def parse_txt(self):
+        # TODO: 猜测格式 anno_txt_path文件数据格式: imgpath lexicon_index lexicon_path文件的数据: 具体值 "12345"
         self.imgs = open(os.path.join(self.dataset_root, self.anno_txt_path), 'r').readlines()
         self.lexicons = open(os.path.join(self.dataset_root, self.lexicon_path), 'r').readlines()

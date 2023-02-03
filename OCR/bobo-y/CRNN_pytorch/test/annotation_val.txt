@@ -1,0 +1,6 @@
+./test/00606.jpg 0
+./test/001262.jpg 1
+./test/02520.jpg 2
+./test/04315.jpg 3
+./test/04504.jpg 4
+
