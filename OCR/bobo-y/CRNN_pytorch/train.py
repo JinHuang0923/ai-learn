@@ -43,6 +43,11 @@ def val(net, valSet, ctc_loss, max_iter=100):
     for i in range(max_iter):
         images, labels, target_lengths, input_lengths = next(val_iter)
         i += 1
+        if use_gpu:
+            images = images.cuda()
+            labels = labels.cuda()
+            target_lengths = target_lengths.cuda()
+            input_lengths = input_lengths.cuda()
         preds = net(images)
         cost = ctc_loss(log_probs=preds, targets=labels, target_lengths=target_lengths, input_lengths=input_lengths)
         loss_avg += cost

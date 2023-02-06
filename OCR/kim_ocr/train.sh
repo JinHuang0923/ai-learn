@@ -1,0 +1,1 @@
+python ./train.py --dataset_root=./data --width=200 --height=32 --max_epoch=50 --num_gpu=1

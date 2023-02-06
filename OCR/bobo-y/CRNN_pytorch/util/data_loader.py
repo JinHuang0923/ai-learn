@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 from torch.utils.data import Dataset
-
+import PIL.Image as Image
 
 class RegDataSet(Dataset):
     def __init__(self, dataset_root, anno_txt_path, lexicon_path, target_size=(200, 32), characters="'-' + '0123456789'", transform=None):
@@ -25,10 +25,18 @@ class RegDataSet(Dataset):
     def __getitem__(self, item):
         # 按空格分割 把图片路径跟对应的lexicon索引分开
         img_path, lexicon_index = self.imgs[item].split()
+        print(f"img_path:{img_path} lexicon_index:{lexicon_index}")
         # lexicon 是一个字符串,存储的具体值 strip会去掉其中的空格.
         lexicon = self.lexicons[int(lexicon_index)].strip()
-        img = cv2.imread(os.path.join(self.dataset_root, img_path))
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img_arr = cv2.imread(os.path.join(self.dataset_root, img_path))
+        # img.save("test.jpg")
+        # convert 2 pil image and save
+        # img = Image.fromarray(img_arr)
+        # img.save("test.jpg")
+
+        img = cv2.cvtColor(img_arr, cv2.COLOR_BGR2RGB)
+        # img = cv2.cvtColor(img)
+
         img_size = img.shape
         if (img_size[1] / (img_size[0] * 1.0)) < 6.4:
             img_reshape = cv2.resize(img, (int(32.0 / img_size[0] * img_size[1]), self.height))
@@ -47,3 +55,6 @@ class RegDataSet(Dataset):
         # TODO: 猜测格式 anno_txt_path文件数据格式: imgpath lexicon_index lexicon_path文件的数据: 具体值 "12345"
         self.imgs = open(os.path.join(self.dataset_root, self.anno_txt_path), 'r').readlines()
         self.lexicons = open(os.path.join(self.dataset_root, self.lexicon_path), 'r').readlines()
+
+        print(self.imgs)
+        print(self.lexicons)
